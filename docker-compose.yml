@@ -3,12 +3,12 @@ version: '3.8'
 services:
   app:
     build: .
-    ports:
-      - "8000:8000"
     environment:
       - PORT=8000
     depends_on:
       - redis
+    networks:
+      - webnet
 
   redis:
     image: redis:alpine
@@ -16,6 +16,24 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data
+    networks:
+      - webnet
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx_prod.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+    networks:
+      - webnet
 
 volumes:
   redis-data:
+
+networks:
+  webnet:

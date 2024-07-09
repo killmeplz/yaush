@@ -1,16 +1,16 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"time"
 
-	"encoding/json"
 	"github.com/go-redis/redis/v8"
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
-	"math/rand"
-	"time"
 )
 
 var ctx = context.Background()
@@ -37,7 +37,7 @@ func (a *App) Initialize() {
 
 	a.Router = mux.NewRouter()
 	a.Router.HandleFunc("/shorten", a.shortenURL).Methods("POST")
-	a.Router.HandleFunc("/{shortURL}", a.redirect).Methods("GET")
+	a.Router.HandleFunc("/r/{shortURL}", a.redirect).Methods("GET")
 }
 
 func (a *App) Run(addr string) {
@@ -60,7 +60,7 @@ func (a *App) shortenURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := URLResponse{ShortURL: shortURL}
+	response := URLResponse{ShortURL: "/r/" + shortURL}
 	json.NewEncoder(w).Encode(response)
 }
 
