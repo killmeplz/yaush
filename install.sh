@@ -43,6 +43,11 @@ EOL
 sudo apt-get update
 sudo apt-get install -y certbot
 
+# Download options-ssl-nginx.conf and ssl-dhparams.pem
+sudo mkdir -p /etc/letsencrypt
+sudo wget https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/ssl-dhparams.pem -O /etc/letsencrypt/ssl-dhparams.pem
+sudo wget https://raw.githubusercontent.com/certbot/certbot/master/certbot/certbot/options-ssl-nginx.conf -O /etc/letsencrypt/options-ssl-nginx.conf
+
 # Obtain SSL certificate
 sudo certbot certonly --standalone -d $DOMAIN_NAME
 
